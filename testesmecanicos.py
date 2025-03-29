@@ -17,22 +17,22 @@ st.markdown("""
         background-color: #1e90ff;
         color: white;
         border-radius: 12px;
-        padding: 8px 16px;  /* Reduzido horizontalmente de 10px 24px para 8px 16px */
-        font-size: 14px;    /* Tamanho da fonte reduzido de 16px para 14px */
+        padding: 8px 16px;
+        font-size: 14px;
         font-weight: bold;
-        width: 150px;       /* Largura fixa menor para os botões */
+        width: 120px !important;  /* Botão "Gerar Relatório" com largura reduzida */
         transition: all 0.3s;
     }
     .stButton>button:hover {
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    .stTextInput>div>input, .stNumberInput>div>input {
+    .stNumberInput>div>input {
         border-radius: 8px;
         padding: 6px;
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 100px;
+        width: 80px !important;  /* Largura reduzida para todos os campos de entrada numéricos */
         font-size: 14px;
     }
     .title {
