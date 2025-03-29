@@ -10,62 +10,73 @@ import tempfile
 # Configuração inicial do Streamlit
 st.markdown("""
     <style>
-    .main {background-color: #e6f0ff;}
+    /* Ajuste ESPECÍFICO para os botões + e - ficarem colados no número */
+    .stNumberInput>div>div {
+        gap: 2px !important;  /* Reduz o espaço entre o número e os botões */
+    }
     
-    /* Remove TODOS os contornos cinza e estilos padrão */
+    /* Ajusta o container do input para ser mais compacto */
+    .stNumberInput>div {
+        width: auto !important;
+        min-width: 100px !important;
+        padding: 0 !important;
+    }
+    
+    /* Ajusta o tamanho dos botões + e - */
+    .stNumberInput>div>div>div>button {
+        width: 20px !important;
+        height: 20px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Ajusta o input numérico para ser mais compacto */
+    .stNumberInput>div>div>input {
+        width: 50px !important;
+        min-width: 50px !important;
+        padding: 2px 4px !important;
+        margin: 0 !important;
+        text-align: center;
+    }
+    
+    /* Mantém todos os outros estilos anteriores */
+    .main {background-color: #e6f0ff;}
     div[data-baseweb="input"] {
         background-color: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
-    
-    /* Inputs numéricos - remove bordas e fundos cinza */
     .stNumberInput>div>div>input {
         background-color: white !important;
         border: none !important;
         box-shadow: none !important;
         border-radius: 4px !important;
-        padding: 4px 8px !important;
     }
-    
-    /* Container dos inputs - remove fundo cinza */
     .stNumberInput>div>div {
         background-color: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
-    
-    /* Remove borda de foco (quando clica no input) */
     .stNumberInput>div>div>input:focus {
         outline: none !important;
         box-shadow: none !important;
         border: none !important;
     }
-    
-    /* Remove bordas dos botões + e - */
     .stNumberInput>div>div>div>button {
         border: none !important;
         background-color: #f0f0f0 !important;
     }
-    
-    /* Remove bordas das seções */
     .st-emotion-cache-1pbsqtx {
         border: none !important;
     }
-    
-    /* Remove linhas divisórias cinza */
     .st-emotion-cache-1dp5vir {
         border: none !important;
     }
-    
-    /* Ajusta os labels para ficarem mais clean */
     .st-emotion-cache-16idsys p {
         color: #1e90ff !important;
         font-weight: bold !important;
         margin-bottom: 4px !important;
     }
-    
-    /* Botões principais */
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -78,7 +89,6 @@ st.markdown("""
         border: none !important;
         box-shadow: none !important;
     }
-    
     .title {
         font-size: 36px;
         font-weight: bold;
@@ -86,14 +96,12 @@ st.markdown("""
         text-align: center;
         margin-bottom: 20px;
     }
-    
     .subtitle {
         font-size: 18px;
         color: #1e90ff;
         text-align: center;
         margin-bottom: 40px;
     }
-    
     .section-header {
         font-size: 24px;
         color: #800080;
@@ -102,8 +110,6 @@ st.markdown("""
         margin-bottom: 10px;
         padding-bottom: 5px;
     }
-    
-    /* Remove bordas das colunas */
     .st-emotion-cache-1v0mbdj {
         border: none !important;
     }
