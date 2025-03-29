@@ -26,13 +26,16 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    .stNumberInput>div>input {
+    /* CSS mais específico para garantir aplicação nos campos numéricos */
+    div[data-baseweb="input"] > div > input[type="number"],
+    .stNumberInput > div > div > input {
         border-radius: 8px;
-        padding: 4px;           /* Reduzido para ocupar menos espaço vertical */
+        padding: 4px;
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 5px !important; /* Largura bem pequena, próxima ao tamanho de um número como "5.2" */
-        font-size: 12px;        /* Fonte menor para combinar com o tamanho reduzido */
+        width: 40px !important;  /* Largura pequena, suficiente para "5.2" */
+        font-size: 12px !important;
+        max-width: 40px !important;  /* Reforça o limite máximo */
     }
     .title {
         font-size: 36px;
