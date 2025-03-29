@@ -51,6 +51,15 @@ st.markdown("""
         left: -5px !important;
     }
     </style>
+    /* Versão ultra-compacta */
+    input[type="number"] {
+        width: 40px !important;
+        margin-right: -8px !important;
+    }
+    div[data-baseweb="input"] > div > div > div > button {
+        width: 16px !important;
+        height: 16px !important;
+    }
 """, unsafe_allow_html=True)
 
 
