@@ -44,7 +44,7 @@ st.markdown("""
     }
     /* Aumentar a distância entre as colunas principais (col1 e col2) */
     .st-emotion-cache-1r4s1i0 {
-        gap: 50px !important;  /* Aumenta o espaço entre Campos Simétricos e Campo Assimétrico */
+        gap: 150px !important;  /* Aumenta o espaço entre Campos Simétricos e Campo Assimétrico */
     }
     </style>
 """, unsafe_allow_html=True)
