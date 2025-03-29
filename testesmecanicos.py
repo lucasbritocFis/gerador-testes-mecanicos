@@ -9,52 +9,41 @@ import tempfile
 
 # Configuração inicial do Streamlit
 st.markdown("""
-    <style>
-    /* --- ESTILO ULTRA COMPACTO (MÁXIMA APROXIMAÇÃO) --- */
-    div[data-baseweb="input"] > div {
-        width: 80px !important;  /* Largura total reduzida */
-        min-width: 80px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    /* Input numérico - extremamente compacto */
-    input[type="number"] {
-        width: 40px !important;
-        min-width: 40px !important;
-        padding: 1px 2px !important;
-        margin: 0 -6px 0 0 !important;  /* Margem negativa para colar nos botões */
-        border: 1px solid #1e90ff !important;
-        border-radius: 4px !important;
-        font-size: 12px !important;
-        text-align: center;
-    }
-    
-    /* Botões + e - miniaturas coladas */
-    div[data-baseweb="input"] > div > div > div > button {
-        width: 16px !important;
-        height: 16px !important;
-        min-width: 16px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: none !important;
-        background: #1e90ff !important;
-        color: white !important;
-        border-radius: 2px !important;
-        font-size: 10px !important;
-    }
-    
-    /* Container dos botões - posicionamento agressivo */
-    div[data-baseweb="input"] > div > div > div {
-        position: relative;
-        left: -4px !important;
-    }
-    
-    /* Efeito hover nos botões */
-    div[data-baseweb="input"] > div > div > div > button:hover {
-        background: #4169e1 !important;
-    }
-    </style>
+<style>
+/* --- BOTÃO ÚNICO COM +/- --- */
+.custom-number-input {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+}
+
+.custom-number-input button {
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: #1e90ff !important;
+    color: white !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+}
+
+.custom-number-input input {
+    width: 40px !important;
+    text-align: center;
+    padding: 2px !important;
+    margin: 0 2px !important;
+    border: 1px solid #1e90ff !important;
+    border-radius: 4px !important;
+}
+</style>
+
+<div class="custom-number-input">
+    <button>-</button>
+    <input type="number" value="10" min="0" max="100" step="1">
+    <button>+</button>
+</div>
 """, unsafe_allow_html=True)
 
 
