@@ -18,8 +18,8 @@ st.markdown("""
     
     /* Inputs numéricos compactos */
     .stNumberInput>div>div>input {
-        width: 60px !important;
-        min-width: 60px !important;
+        width: 10px !important;
+        min-width: 10px !important;
         padding: 4px 8px !important;
         margin: 0 !important;
         border: 1px solid #add8e6 !important;  /* Azul claro */
