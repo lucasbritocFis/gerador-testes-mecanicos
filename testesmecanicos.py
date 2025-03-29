@@ -11,7 +11,9 @@ import tempfile
 st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
-    .main {background-color: #e6f0ff;}  /* Azul claro no lugar de cinza */
+    .main {background-color: #e6f0ff;}
+    
+    /* Remove bordas e contornos dos botões */
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -21,11 +23,40 @@ st.markdown("""
         font-weight: bold;
         width: 120px !important;
         transition: all 0.3s;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     .stButton>button:hover {
         background-color: #4169e1;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
     }
+    
+    /* Remove bordas dos containers */
+    .block-container {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Remove linhas cinza de separação */
+    hr {
+        border: none !important;
+        height: 1px;
+        background-color: #1e90ff !important;
+        margin: 1rem 0;
+    }
+    
+    /* Remove bordas dos inputs */
+    .stNumberInput, .stTextInput, .stSelectbox {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Remove fundo cinza dos widgets */
+    .stNumberInput>div>div, .stTextInput>div>div {
+        background-color: transparent !important;
+    }
+    
     /* Ajuste do campo numérico */
     div[data-baseweb="input"] > div > input[type="number"],
     .stNumberInput > div > div > input {
@@ -39,6 +70,7 @@ st.markdown("""
         margin: 0px !important;
         box-shadow: none !important;
     }
+    
     /* Container do number_input */
     .stNumberInput > div > div {
         display: flex !important;
@@ -49,6 +81,7 @@ st.markdown("""
         border: none !important;
         background: transparent !important;
     }
+    
     /* Botões + e - */
     .stNumberInput > div > div > div > button {
         padding: 0px !important;
@@ -59,6 +92,7 @@ st.markdown("""
         border-radius: 2px !important;
         border: none !important;
     }
+    
     .title {
         font-size: 36px;
         font-weight: bold;
@@ -66,18 +100,33 @@ st.markdown("""
         text-align: center;
         margin-bottom: 20px;
     }
+    
     .subtitle {
         font-size: 18px;
-        color: #1e90ff;  /* Azul escuro no lugar de cinza */
+        color: #1e90ff;
         text-align: center;
         margin-bottom: 40px;
     }
+    
     .section-header {
         font-size: 24px;
-        color: #800080;  /* Roxo no lugar de cinza */
+        color: #800080;
         font-weight: bold;
         margin-top: 20px;
         margin-bottom: 10px;
+        border-bottom: 2px solid #1e90ff !important;
+        padding-bottom: 5px;
+    }
+    
+    /* Remove bordas das colunas */
+    .st-emotion-cache-1v0mbdj {
+        border: none !important;
+    }
+    
+    /* Remove sombras e bordas dos cards */
+    .st-emotion-cache-1dp5vir {
+        box-shadow: none !important;
+        border: none !important;
     }
     </style>
 """, unsafe_allow_html=True)
