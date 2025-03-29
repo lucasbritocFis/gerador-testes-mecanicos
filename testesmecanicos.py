@@ -7,8 +7,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import tempfile
 
-# Configuração inicial do Streamlit com layout moderno
-st.set_page_config(page_title="Gerador de Relatórios Mecânicos", layout="wide", page_icon="⚙️")
+# Configuração inicial do Streamlit
+st.set_page_config(page_title="Testes Mecânicos em Aceleradores Lineares", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
     .main {background-color: #f0f2f6;}
@@ -54,55 +54,45 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Função para criar gráficos e salvá-los como PNG
-def criar_graficos(dados):
-    graficos = {}
+# Função para criar gráficos de comparação
+def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
+    fig, ax = plt.subplots(figsize=(5, 5))
+    
+    if tipo == "simetrico":
+        x_padrao, y_padrao = tamanho, tamanho
+        x_medido, y_medido = medido["x"], medido["y"]
+        ax.set_title(f"Campo Simétrico {tamanho}x{tamanho} cm")
+    else:
+        x_padrao = padrao["x2"] - padrao["x1"]
+        y_padrao = padrao["y2"] - padrao["y1"]
+        x_medido = medido["x2"] - medido["x1"]
+        y_medido = medido["y2"] - medido["y1"]
+        ax.set_title("Campo Assimétrico")
 
-    # Gráfico de Posicionamento (X1, X2, Y1, Y2)
-    fig, ax = plt.subplots(figsize=(5, 3))
-    ax.plot([dados["posicionamento"]["x1"], dados["posicionamento"]["x2"]], 
-            [dados["posicionamento"]["y1"], dados["posicionamento"]["y2"]], 
-            'bo-', label="Trajetória")
+    # Campo padrão
+    ax.add_patch(plt.Rectangle((-x_padrao/2, -y_padrao/2), x_padrao, y_padrao, fill=False, color="blue", label="Padrão"))
+    # Campo medido
+    ax.add_patch(plt.Rectangle((-x_medido/2, -y_medido/2), x_medido, y_medido, fill=False, color="red", label="Medido"))
+    # Tolerância (±2 mm)
+    ax.add_patch(plt.Rectangle((-x_padrao/2 - 0.2, -y_padrao/2 - 0.2), x_padrao + 0.4, y_padrao + 0.4, 
+                               fill=False, color="green", linestyle="--", label="Tolerância (±2 mm)"))
+
+    ax.set_xlim(-max(x_padrao, x_medido)/2 - 1, max(x_padrao, x_medido)/2 + 1)
+    ax.set_ylim(-max(y_padrao, y_medido)/2 - 1, max(y_padrao, y_medido)/2 + 1)
     ax.set_xlabel("X (cm)")
     ax.set_ylabel("Y (cm)")
-    ax.set_title("Posicionamento (X, Y)")
     ax.grid(True)
     ax.legend()
+    ax.set_aspect('equal')
+
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         fig.savefig(tmp.name, format="png", dpi=100)
-        graficos["posicionamento"] = tmp.name
+        caminho = tmp.name
     plt.close(fig)
+    return caminho
 
-    # Gráfico de Ângulos Mecânicos (Gantry, Colimador, Mesa)
-    fig, ax = plt.subplots(figsize=(5, 3))
-    angulos = [dados["mecanicos"]["gantry"], dados["mecanicos"]["colimador"], dados["mecanicos"]["mesa"]]
-    labels = ["Gantry", "Colimador", "Mesa"]
-    ax.bar(labels, angulos, color=["#1e90ff", "#4169e1", "#6495ed"])
-    ax.set_ylabel("Ângulo (°)")
-    ax.set_title("Ângulos Mecânicos")
-    ax.set_ylim(0, 360)
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        fig.savefig(tmp.name, format="png", dpi=100)
-        graficos["angulos"] = tmp.name
-    plt.close(fig)
-
-    # Gráfico de Deslocamentos (Lateral, Vertical, Longitudinal)
-    fig, ax = plt.subplots(figsize=(5, 3))
-    deslocamentos = [dados["mecanicos"]["desloc_lateral"], dados["mecanicos"]["desloc_vertical"], dados["mecanicos"]["desloc_longitudinal"]]
-    labels = ["Lateral", "Vertical", "Longitudinal"]
-    ax.bar(labels, deslocamentos, color=["#ff6347", "#ff4500", "#ff7f50"])
-    ax.set_ylabel("Deslocamento (cm)")
-    ax.set_title("Deslocamentos")
-    ax.set_ylim(-50, 50)
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        fig.savefig(tmp.name, format="png", dpi=100)
-        graficos["deslocamentos"] = tmp.name
-    plt.close(fig)
-
-    return graficos
-
-# Função para gerar o PDF com gráficos
-def gerar_relatorio_pdf(dados):
+# Função para gerar o PDF
+def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
@@ -110,151 +100,121 @@ def gerar_relatorio_pdf(dados):
     # Cabeçalho
     c.setFillColor(colors.darkblue)
     c.setFont("Helvetica-Bold", 20)
-    c.drawString(60, height - 50, "Relatório de Testes Mecânicos")
+    c.drawString(60, height - 50, "Relatório de Testes de Tamanhos de Campo")
     c.setFillColor(colors.grey)
     c.setFont("Helvetica", 12)
     c.drawString(60, height - 70, f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
     c.line(60, height - 80, width - 60, height - 80)
 
-    # Dados Gerais
     y = height - 120
-    c.setFillColor(colors.black)
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(60, y, "Dados Gerais")
-    y -= 20
-    c.setFont("Helvetica", 12)
-    for chave, valor in dados["gerais"].items():
-        c.drawString(60, y, f"{chave}: {valor}")
+    # Testes Simétricos
+    if dados_simetricos:
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(60, y, "Testes Simétricos")
         y -= 20
+        tamanhos = [5, 10, 15, 20, 25]
+        for i, tamanho in enumerate(tamanhos):
+            x_medido = dados_simetricos[f"{tamanho}x{tamanho}"]["x"]
+            y_medido = dados_simetricos[f"{tamanho}x{tamanho}"]["y"]
+            c.setFont("Helvetica", 12)
+            c.drawString(60, y, f"Campo {tamanho}x{tamanho} cm: X = {x_medido} cm, Y = {y_medido} cm")
+            tolerancia_x = abs(x_medido - tamanho) <= 0.2
+            tolerancia_y = abs(y_medido - tamanho) <= 0.2
+            c.setFillColor(tolerancia_x and tolerancia_y and colors.green or colors.red)
+            c.drawString(300, y, f"{'Dentro' if tolerancia_x and tolerancia_y else 'Fora'} da tolerância (±2 mm)")
+            c.setFillColor(colors.black)
+            grafico = criar_grafico_campo(None, {"x": x_medido, "y": y_medido}, "simetrico", tamanho)
+            c.drawImage(grafico, 60, y - 150, width=200, height=200)
+            y -= 220
 
-    # Parâmetros de Posicionamento
-    y -= 20
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(60, y, "Parâmetros de Posicionamento")
-    y -= 20
-    c.setFont("Helvetica", 12)
-    c.drawString(60, y, f"X1: {dados['posicionamento']['x1']} cm")
-    c.drawString(200, y, f"X2: {dados['posicionamento']['x2']} cm")
-    y -= 20
-    c.drawString(60, y, f"Y1: {dados['posicionamento']['y1']} cm")
-    c.drawString(200, y, f"Y2: {dados['posicionamento']['y2']} cm")
-
-    # Parâmetros Mecânicos
-    y -= 40
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(60, y, "Parâmetros Mecânicos")
-    y -= 20
-    c.setFont("Helvetica", 12)
-    c.drawString(60, y, f"Gantry: {dados['mecanicos']['gantry']}°")
-    c.drawString(200, y, f"Colimador: {dados['mecanicos']['colimador']}°")
-    c.drawString(340, y, f"Mesa: {dados['mecanicos']['mesa']}°")
-    y -= 20
-    c.drawString(60, y, f"Deslocamento Lateral: {dados['mecanicos']['desloc_lateral']} cm")
-    c.drawString(200, y, f"Deslocamento Vertical: {dados['mecanicos']['desloc_vertical']} cm")
-    c.drawString(340, y, f"Deslocamento Longitudinal: {dados['mecanicos']['desloc_longitudinal']} cm")
-
-    # Gráficos
-    graficos = criar_graficos(dados)
-    y -= 40
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(60, y, "Representação Gráfica")
-    y -= 20
-
-    # Posicionamento
-    c.setFont("Helvetica", 12)
-    c.drawString(60, y, "Trajetória de Posicionamento (X, Y)")
-    c.drawImage(graficos["posicionamento"], 60, y - 150, width=200, height=120)
-
-    # Ângulos
-    y -= 180
-    c.drawString(60, y, "Ângulos Mecânicos")
-    c.drawImage(graficos["angulos"], 60, y - 150, width=200, height=120)
-
-    # Deslocamentos
-    y -= 180
-    c.drawString(60, y, "Deslocamentos")
-    c.drawImage(graficos["deslocamentos"], 60, y - 150, width=200, height=120)
+    # Testes Assimétricos
+    if dados_assimetricos:
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(60, y, "Testes Assimétricos")
+        y -= 20
+        c.setFont("Helvetica", 12)
+        c.drawString(60, y, f"Padrão: X1={dados_assimetricos['padrao']['x1']}, X2={dados_assimetricos['padrao']['x2']}, "
+                           f"Y1={dados_assimetricos['padrao']['y1']}, Y2={dados_assimetricos['padrao']['y2']} cm")
+        y -= 20
+        c.drawString(60, y, f"Medido: X1={dados_assimetricos['medido']['x1']}, X2={dados_assimetricos['medido']['x2']}, "
+                           f"Y1={dados_assimetricos['medido']['y1']}, Y2={dados_assimetricos['medido']['y2']} cm")
+        tolerancia_x1 = abs(dados_assimetricos['medido']['x1'] - dados_assimetricos['padrao']['x1']) <= 0.2
+        tolerancia_x2 = abs(dados_assimetricos['medido']['x2'] - dados_assimetricos['padrao']['x2']) <= 0.2
+        tolerancia_y1 = abs(dados_assimetricos['medido']['y1'] - dados_assimetricos['padrao']['y1']) <= 0.2
+        tolerancia_y2 = abs(dados_assimetricos['medido']['y2'] - dados_assimetricos['padrao']['y2']) <= 0.2
+        c.setFillColor(all([tolerancia_x1, tolerancia_x2, tolerancia_y1, tolerancia_y2]) and colors.green or colors.red)
+        c.drawString(300, y, f"{'Dentro' if all([tolerancia_x1, tolerancia_x2, tolerancia_y1, tolerancia_y2]) else 'Fora'} da tolerância (±2 mm)")
+        c.setFillColor(colors.black)
+        grafico = criar_grafico_campo(dados_assimetricos["padrao"], dados_assimetricos["medido"], "assimetrico")
+        c.drawImage(grafico, 60, y - 150, width=200, height=200)
 
     # Rodapé
     c.setFillColor(colors.grey)
     c.setFont("Helvetica", 10)
-    c.drawString(60, 40, "Gerado por Streamlit - Testes Mecânicos")
+    c.drawString(60, 40, "Gerado por Streamlit - Testes de Tamanhos de Campo")
     c.drawString(width - 100, 40, f"Página 1")
-
     c.save()
     buffer.seek(0)
     return buffer
 
 # Interface do Streamlit
-st.markdown('<div class="title">⚙️ Gerador de Relatórios Mecânicos</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Insira os parâmetros abaixo para criar um relatório com gráficos</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
-# Formulário para entrada de dados
-with st.form(key="form_testes_mecanicos"):
-    st.markdown('<div class="section-header">Dados Gerais</div>', unsafe_allow_html=True)
+# Abas para testes simétricos e assimétricos
+tab1, tab2 = st.tabs(["Testes Simétricos", "Testes Assimétricos"])
+
+# Dados para os testes
+dados_simetricos = {}
+dados_assimetricos = {}
+
+# Testes Simétricos
+with tab1:
+    st.markdown('<div class="section-header">Campos Simétricos</div>', unsafe_allow_html=True)
+    for tamanho in [5, 10, 15, 20, 25]:
+        st.write(f"Campo {tamanho}x{tamanho} cm")
+        col1, col2 = st.columns(2)
+        with col1:
+            x = st.number_input(f"X medido ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"x_{tamanho}")
+        with col2:
+            y = st.number_input(f"Y medido ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
+        dados_simetricos[f"{tamanho}x{tamanho}"] = {"x": x, "y": y}
+
+# Testes Assimétricos
+with tab2:
+    st.markdown('<div class="section-header">Campo Assimétrico - Padrão</div>', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        nome_teste = st.text_input("Nome do Teste", "Teste Mecânico 01")
-        responsavel = st.text_input("Responsável", "João Silva")
+        x1_padrao = st.number_input("X1 Padrão (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_padrao")
+        y1_padrao = st.number_input("Y1 Padrão (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_padrao")
     with col2:
-        equipamento = st.text_input("Equipamento", "Máquina XYZ")
-        data_teste = st.date_input("Data do Teste", datetime.now())
+        x2_padrao = st.number_input("X2 Padrão (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_padrao")
+        y2_padrao = st.number_input("Y2 Padrão (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_padrao")
 
-    st.markdown('<div class="section-header">Parâmetros de Posicionamento</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">Campo Assimétrico - Medido</div>', unsafe_allow_html=True)
     col3, col4 = st.columns(2)
     with col3:
-        x1 = st.number_input("X1 (cm)", min_value=-100.0, max_value=100.0, value=0.0, step=0.1)
-        y1 = st.number_input("Y1 (cm)", min_value=-100.0, max_value=100.0, value=0.0, step=0.1)
+        x1_medido = st.number_input("X1 Medido (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_medido")
+        y1_medido = st.number_input("Y1 Medido (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_medido")
     with col4:
-        x2 = st.number_input("X2 (cm)", min_value=-100.0, max_value=100.0, value=0.0, step=0.1)
-        y2 = st.number_input("Y2 (cm)", min_value=-100.0, max_value=100.0, value=0.0, step=0.1)
+        x2_medido = st.number_input("X2 Medido (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_medido")
+        y2_medido = st.number_input("Y2 Medido (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_medido")
 
-    st.markdown('<div class="section-header">Parâmetros Mecânicos</div>', unsafe_allow_html=True)
-    col5, col6, col7 = st.columns(3)
-    with col5:
-        gantry = st.number_input("Gantry (°)", min_value=0.0, max_value=360.0, value=0.0, step=1.0)
-        desloc_lateral = st.number_input("Deslocamento Lateral (cm)", min_value=-50.0, max_value=50.0, value=0.0, step=0.1)
-    with col6:
-        colimador = st.number_input("Colimador (°)", min_value=0.0, max_value=360.0, value=0.0, step=1.0)
-        desloc_vertical = st.number_input("Deslocamento Vertical (cm)", min_value=-50.0, max_value=50.0, value=0.0, step=0.1)
-    with col7:
-        mesa = st.number_input("Mesa (°)", min_value=0.0, max_value=360.0, value=0.0, step=1.0)
-        desloc_longitudinal = st.number_input("Deslocamento Longitudinal (cm)", min_value=-50.0, max_value=50.0, value=0.0, step=0.1)
+    dados_assimetricos = {
+        "padrao": {"x1": x1_padrao, "x2": x2_padrao, "y1": y1_padrao, "y2": y2_padrao},
+        "medido": {"x1": x1_medido, "x2": x2_medido, "y1": y1_medido, "y2": y2_medido}
+    }
 
-    # Botão para gerar o relatório
-    submit_button = st.form_submit_button(label="Gerar Relatório")
-
-# Processamento do formulário
-if submit_button:
-    with st.spinner("Gerando o relatório com gráficos..."):
-        dados = {
-            "gerais": {
-                "Nome do Teste": nome_teste,
-                "Responsável": responsavel,
-                "Equipamento": equipamento,
-                "Data do Teste": data_teste.strftime("%d/%m/%Y")
-            },
-            "posicionamento": {
-                "x1": x1,
-                "x2": x2,
-                "y1": y1,
-                "y2": y2
-            },
-            "mecanicos": {
-                "gantry": gantry,
-                "colimador": colimador,
-                "mesa": mesa,
-                "desloc_lateral": desloc_lateral,
-                "desloc_vertical": desloc_vertical,
-                "desloc_longitudinal": desloc_longitudinal
-            }
-        }
-        pdf_buffer = gerar_relatorio_pdf(dados)
+# Botão para gerar relatório
+if st.button("Gerar Relatório"):
+    with st.spinner("Gerando o relatório..."):
+        pdf_buffer = gerar_relatorio_pdf(dados_simetricos, dados_assimetricos)
         st.success("Relatório gerado com sucesso!")
         st.download_button(
             label="Baixar Relatório",
             data=pdf_buffer,
-            file_name=f"Relatorio_Mecanico_{nome_teste.replace(' ', '_')}.pdf",
+            file_name="Relatorio_Tamanhos_Campo.pdf",
             mime="application/pdf"
         )
 
