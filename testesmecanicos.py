@@ -10,56 +10,51 @@ import tempfile
 # Configuração inicial do Streamlit
 st.markdown("""
     <style>
-    /* --- ESTILO SUPER COMPACTO GARANTIDO --- */
-    /* Sobrescreve TUDO do Streamlit */
+    /* --- ESTILO ULTRA COMPACTO (MÁXIMA APROXIMAÇÃO) --- */
     div[data-baseweb="input"] > div {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 90px !important;  /* Largura total do componente */
-    }
-    
-    /* Container interno - alinhamento extremo */
-    div[data-baseweb="input"] > div > div {
-        gap: 0 !important;
+        width: 80px !important;  /* Largura total reduzida */
+        min-width: 80px !important;
         padding: 0 !important;
         margin: 0 !important;
     }
     
-    /* Input numérico - mínimo possível */
+    /* Input numérico - extremamente compacto */
     input[type="number"] {
-        width: 50px !important;
-        min-width: 50px !important;
-        padding: 2px 4px !important;
-        margin: 0 -4px 0 0 !important;  /* Empurra para a direita */
+        width: 40px !important;
+        min-width: 40px !important;
+        padding: 1px 2px !important;
+        margin: 0 -6px 0 0 !important;  /* Margem negativa para colar nos botões */
         border: 1px solid #1e90ff !important;
+        border-radius: 4px !important;
+        font-size: 12px !important;
+        text-align: center;
     }
     
-    /* Botões + e - colados */
+    /* Botões + e - miniaturas coladas */
     div[data-baseweb="input"] > div > div > div > button {
-        width: 20px !important;
-        height: 20px !important;
-        min-width: 20px !important;
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
         background: #1e90ff !important;
+        color: white !important;
+        border-radius: 2px !important;
+        font-size: 10px !important;
     }
     
-    /* Posicionamento absoluto para colar os botões */
+    /* Container dos botões - posicionamento agressivo */
     div[data-baseweb="input"] > div > div > div {
         position: relative;
-        left: -5px !important;
+        left: -4px !important;
+    }
+    
+    /* Efeito hover nos botões */
+    div[data-baseweb="input"] > div > div > div > button:hover {
+        background: #4169e1 !important;
     }
     </style>
-    /* Versão ultra-compacta */
-    input[type="number"] {
-        width: 40px !important;
-        margin-right: -8px !important;
-    }
-    div[data-baseweb="input"] > div > div > div > button {
-        width: 16px !important;
-        height: 16px !important;
-    }
 """, unsafe_allow_html=True)
 
 
