@@ -1,3 +1,4 @@
+
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -26,25 +27,34 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    /* Ajuste dos campos numéricos e botões + e - */
+    /* Ajuste extremo para o campo numérico e botões */
     div[data-baseweb="input"] > div > input[type="number"],
     .stNumberInput > div > div > input {
-        border-radius: 8px;
-        padding: 4px;
+        border-radius: 4px;         /* Reduzido para caber em menos espaço */
+        padding: 2px !important;    /* Menor padding */
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 40px !important;
+        width: 40px !important;     /* Só o espaço do número (ex.: "5.20") */
         font-size: 12px !important;
         max-width: 40px !important;
-        margin-right: 0px !important;  /* Remove margem à direita do input */
+        margin: 0px !important;     /* Remove margens extras */
     }
-    /* Ajuste dos botões + e - para ficarem mais próximos */
+    /* Container do number_input */
+    .stNumberInput > div > div {
+        display: flex !important;
+        align-items: center !important;
+        width: 70px !important;     /* Largura total mínima para input + botões */
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+    /* Botões + e - */
     .stNumberInput > div > div > div > button {
-        padding: 0px !important;      /* Reduz padding dos botões */
-        width: 15px !important;       /* Largura pequena para os botões */
-        height: 15px !important;      /* Altura pequena para os botões */
-        font-size: 10px !important;   /* Tamanho da fonte dos botões */
-        margin-left: 2px !important;  /* Reduz espaço entre input e botões */
+        padding: 0px !important;
+        width: 12px !important;     /* Botões menores */
+        height: 12px !important;
+        font-size: 8px !important;  /* Símbolos menores */
+        margin: 0px !important;     /* Sem margem */
+        border-radius: 2px !important;
     }
     .title {
         font-size: 36px;
@@ -225,6 +235,11 @@ if st.button("Gerar Relatório"):
             file_name="Relatorio_Tamanhos_Campo.pdf",
             mime="application/pdf"
         )
+
+st.markdown("""
+    <hr style="border: 1px solid #dcdcdc;">
+    <p style="text-align: center; color: #777777;">Desenvolvido com Streamlit • 2025</p>
+""", unsafe_allow_html=True)
 
 st.markdown("""
     <hr style="border: 1px solid #dcdcdc;">
