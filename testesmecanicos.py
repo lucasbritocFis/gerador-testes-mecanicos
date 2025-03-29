@@ -1,3 +1,4 @@
+
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -26,75 +27,31 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    div[data-baseweb="input"] > div > input[type="number"],
-    .stNumberInput > div > div > input {
-        border-radius: 4px;
-        padding: 2px !important;
-        border: none !important;
-        background-color: #ffffff;
-        width: 40px !important;
-        font-size: 12px !important;
-        max-width: 40px !important;
+    /* Ajuste dos campos numéricos */
+    .stNumberInput {
         margin: 0px !important;
-        box-shadow: none !important;
-    }
-    .stNumberInput > div > div {
-        display: flex !important;
-        align-items: center !important;
-        width: 70px !important;
         padding: 0px !important;
-        margin: 0px !important;
-        border: none !important;
-        background: transparent !important;
+        width: 60px !important;  /* Ajuste a largura conforme necessário */
     }
-    .stNumberInput > div > div > div > button {
+    .stNumberInput > div {
+        margin: 0px !important;
         padding: 0px !important;
-        width: 12px !important;
-        height: 12px !important;
-        font-size: 8px !important;
-        margin: 0px !important;
-        border-radius: 2px !important;
-        border: none !important;
-        background-color: #ffffff !important;
     }
-    .stNumberInput, .stNumberInput * {
-        border: none !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }
-    .title {
-        font-size: 36px;
-        font-weight: bold;
-        color: #1e90ff;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .subtitle {
-        font-size: 18px;
-        color: #1e90ff;
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    .section-header {
-        font-size: 24px;
-        color: #800080;
-        font-weight: bold;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-    /* Ajuste do espaçamento entre colunas */
+    /* Ajuste das colunas */
     [class*="stHorizontal"] > div {
-        margin-right: 2px !important;  /* Reduz o espaço à direita de cada coluna */
-        margin-left: 2px !important;   /* Reduz o espaço à esquerda de cada coluna */
-        padding: 0px !important;       /* Remove padding interno */
+        max-width: 60px !important;  /* Largura máxima das colunas */
+        margin-right: 2px !important;
+        margin-left: 2px !important;
     }
-    .row-widget.stHorizontal {
-        gap: 2px !important;           /* Tenta aplicar gap como fallback */
+    /* Remover espaçamento extra */
+    .st-emotion-cache-1r4s1i0 {
+        margin: 0px !important;
+        padding: 0px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Função para criar gráficos (mantida sem alterações)
+# Função para criar gráficos
 def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
     fig, ax = plt.subplots(figsize=(5, 5))
     escala = 0.1
@@ -128,7 +85,7 @@ def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
     plt.close(fig)
     return caminho
 
-# Função para gerar o PDF (mantida sem alterações)
+# Função para gerar o PDF
 def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
