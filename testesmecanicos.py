@@ -5,8 +5,6 @@ from reportlab.lib import colors
 import io
 from datetime import datetime
 import matplotlib.pyplot as plt
-from reportlab.graphics import renderPDF
-from svglib.svglib import svg2rlg
 import tempfile
 
 # Configuração inicial do Streamlit com layout moderno
@@ -56,7 +54,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Função para criar gráficos e salvá-los como SVG
+# Função para criar gráficos e salvá-los como PNG
 def criar_graficos(dados):
     graficos = {}
 
@@ -70,8 +68,8 @@ def criar_graficos(dados):
     ax.set_title("Posicionamento (X, Y)")
     ax.grid(True)
     ax.legend()
-    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
-        fig.savefig(tmp.name, format="svg")
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        fig.savefig(tmp.name, format="png", dpi=100)
         graficos["posicionamento"] = tmp.name
     plt.close(fig)
 
@@ -83,8 +81,8 @@ def criar_graficos(dados):
     ax.set_ylabel("Ângulo (°)")
     ax.set_title("Ângulos Mecânicos")
     ax.set_ylim(0, 360)
-    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
-        fig.savefig(tmp.name, format="svg")
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        fig.savefig(tmp.name, format="png", dpi=100)
         graficos["angulos"] = tmp.name
     plt.close(fig)
 
@@ -96,8 +94,8 @@ def criar_graficos(dados):
     ax.set_ylabel("Deslocamento (cm)")
     ax.set_title("Deslocamentos")
     ax.set_ylim(-50, 50)
-    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
-        fig.savefig(tmp.name, format="svg")
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        fig.savefig(tmp.name, format="png", dpi=100)
         graficos["deslocamentos"] = tmp.name
     plt.close(fig)
 
@@ -165,20 +163,17 @@ def gerar_relatorio_pdf(dados):
     # Posicionamento
     c.setFont("Helvetica", 12)
     c.drawString(60, y, "Trajetória de Posicionamento (X, Y)")
-    grafico_pos = svg2rlg(graficos["posicionamento"])
-    renderPDF.draw(grafico_pos, c, 60, y - 150, 200, 120)
+    c.drawImage(graficos["posicionamento"], 60, y - 150, width=200, height=120)
 
     # Ângulos
     y -= 180
     c.drawString(60, y, "Ângulos Mecânicos")
-    grafico_ang = svg2rlg(graficos["angulos"])
-    renderPDF.draw(grafico_ang, c, 60, y - 150, 200, 120)
+    c.drawImage(graficos["angulos"], 60, y - 150, width=200, height=120)
 
     # Deslocamentos
     y -= 180
     c.drawString(60, y, "Deslocamentos")
-    grafico_desloc = svg2rlg(graficos["deslocamentos"])
-    renderPDF.draw(grafico_desloc, c, 60, y - 150, 200, 120)
+    c.drawImage(graficos["deslocamentos"], 60, y - 150, width=200, height=120)
 
     # Rodapé
     c.setFillColor(colors.grey)
