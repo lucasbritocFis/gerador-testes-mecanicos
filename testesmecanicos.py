@@ -84,7 +84,7 @@ st.markdown("""
     }
     /* Reduzir a distância entre colunas */
     .row-widget.stHorizontal {
-        gap: 2px !important;  /* Espaço reduzido entre colunas (ajuste conforme necessário) */
+        gap: -102px !important;  /* Espaço reduzido entre colunas (ajuste conforme necessário) */
     }
     </style>
 """, unsafe_allow_html=True)
