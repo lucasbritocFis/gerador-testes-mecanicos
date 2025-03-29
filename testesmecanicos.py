@@ -4,6 +4,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 import io
 from datetime import datetime
+import matplotlib.pyplot as plt
+from reportlab.graphics import renderPDF
+from svglib.svglib import svg2rlg
+import tempfile
 
 # Configuração inicial do Streamlit com layout moderno
 st.set_page_config(page_title="Gerador de Relatórios Mecânicos", layout="wide", page_icon="⚙️")
@@ -52,7 +56,54 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Função para gerar o PDF
+# Função para criar gráficos e salvá-los como SVG
+def criar_graficos(dados):
+    graficos = {}
+
+    # Gráfico de Posicionamento (X1, X2, Y1, Y2)
+    fig, ax = plt.subplots(figsize=(5, 3))
+    ax.plot([dados["posicionamento"]["x1"], dados["posicionamento"]["x2"]], 
+            [dados["posicionamento"]["y1"], dados["posicionamento"]["y2"]], 
+            'bo-', label="Trajetória")
+    ax.set_xlabel("X (cm)")
+    ax.set_ylabel("Y (cm)")
+    ax.set_title("Posicionamento (X, Y)")
+    ax.grid(True)
+    ax.legend()
+    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
+        fig.savefig(tmp.name, format="svg")
+        graficos["posicionamento"] = tmp.name
+    plt.close(fig)
+
+    # Gráfico de Ângulos Mecânicos (Gantry, Colimador, Mesa)
+    fig, ax = plt.subplots(figsize=(5, 3))
+    angulos = [dados["mecanicos"]["gantry"], dados["mecanicos"]["colimador"], dados["mecanicos"]["mesa"]]
+    labels = ["Gantry", "Colimador", "Mesa"]
+    ax.bar(labels, angulos, color=["#1e90ff", "#4169e1", "#6495ed"])
+    ax.set_ylabel("Ângulo (°)")
+    ax.set_title("Ângulos Mecânicos")
+    ax.set_ylim(0, 360)
+    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
+        fig.savefig(tmp.name, format="svg")
+        graficos["angulos"] = tmp.name
+    plt.close(fig)
+
+    # Gráfico de Deslocamentos (Lateral, Vertical, Longitudinal)
+    fig, ax = plt.subplots(figsize=(5, 3))
+    deslocamentos = [dados["mecanicos"]["desloc_lateral"], dados["mecanicos"]["desloc_vertical"], dados["mecanicos"]["desloc_longitudinal"]]
+    labels = ["Lateral", "Vertical", "Longitudinal"]
+    ax.bar(labels, deslocamentos, color=["#ff6347", "#ff4500", "#ff7f50"])
+    ax.set_ylabel("Deslocamento (cm)")
+    ax.set_title("Deslocamentos")
+    ax.set_ylim(-50, 50)
+    with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
+        fig.savefig(tmp.name, format="svg")
+        graficos["deslocamentos"] = tmp.name
+    plt.close(fig)
+
+    return graficos
+
+# Função para gerar o PDF com gráficos
 def gerar_relatorio_pdf(dados):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -104,6 +155,31 @@ def gerar_relatorio_pdf(dados):
     c.drawString(200, y, f"Deslocamento Vertical: {dados['mecanicos']['desloc_vertical']} cm")
     c.drawString(340, y, f"Deslocamento Longitudinal: {dados['mecanicos']['desloc_longitudinal']} cm")
 
+    # Gráficos
+    graficos = criar_graficos(dados)
+    y -= 40
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(60, y, "Representação Gráfica")
+    y -= 20
+
+    # Posicionamento
+    c.setFont("Helvetica", 12)
+    c.drawString(60, y, "Trajetória de Posicionamento (X, Y)")
+    grafico_pos = svg2rlg(graficos["posicionamento"])
+    renderPDF.draw(grafico_pos, c, 60, y - 150, 200, 120)
+
+    # Ângulos
+    y -= 180
+    c.drawString(60, y, "Ângulos Mecânicos")
+    grafico_ang = svg2rlg(graficos["angulos"])
+    renderPDF.draw(grafico_ang, c, 60, y - 150, 200, 120)
+
+    # Deslocamentos
+    y -= 180
+    c.drawString(60, y, "Deslocamentos")
+    grafico_desloc = svg2rlg(graficos["deslocamentos"])
+    renderPDF.draw(grafico_desloc, c, 60, y - 150, 200, 120)
+
     # Rodapé
     c.setFillColor(colors.grey)
     c.setFont("Helvetica", 10)
@@ -116,7 +192,7 @@ def gerar_relatorio_pdf(dados):
 
 # Interface do Streamlit
 st.markdown('<div class="title">⚙️ Gerador de Relatórios Mecânicos</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Insira os parâmetros abaixo para criar um relatório personalizado</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Insira os parâmetros abaixo para criar um relatório com gráficos</div>', unsafe_allow_html=True)
 
 # Formulário para entrada de dados
 with st.form(key="form_testes_mecanicos"):
@@ -155,7 +231,7 @@ with st.form(key="form_testes_mecanicos"):
 
 # Processamento do formulário
 if submit_button:
-    with st.spinner("Gerando o relatório..."):
+    with st.spinner("Gerando o relatório com gráficos..."):
         dados = {
             "gerais": {
                 "Nome do Teste": nome_teste,
