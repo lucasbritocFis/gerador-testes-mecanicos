@@ -31,7 +31,7 @@ st.markdown("""
         padding: 4px;           /* Reduzido para ocupar menos espaço vertical */
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 50px !important; /* Largura bem pequena, próxima ao tamanho de um número como "5.2" */
+        width: 5px !important; /* Largura bem pequena, próxima ao tamanho de um número como "5.2" */
         font-size: 12px;        /* Fonte menor para combinar com o tamanho reduzido */
     }
     .title {
