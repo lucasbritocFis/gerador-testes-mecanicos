@@ -11,7 +11,7 @@ import tempfile
 st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
-    .main {background-color: #ffffff;}  /* Fundo branco em vez de cinza */
+    .main {background-color: #e6f0ff;}  /* Azul claro no lugar de cinza */
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -68,13 +68,13 @@ st.markdown("""
     }
     .subtitle {
         font-size: 18px;
-        color: #000000;  /* Preto em vez de cinza */
+        color: #1e90ff;  /* Azul escuro no lugar de cinza */
         text-align: center;
         margin-bottom: 40px;
     }
     .section-header {
         font-size: 24px;
-        color: #000000;  /* Preto em vez de cinza */
+        color: #800080;  /* Roxo no lugar de cinza */
         font-weight: bold;
         margin-top: 20px;
         margin-bottom: 10px;
@@ -130,7 +130,7 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     c.setFillColor(colors.darkblue)
     c.setFont("Helvetica-Bold", 20)
     c.drawString(60, height - 50, "Relatório de Testes de Tamanhos de Campo")
-    c.setFillColor(colors.black)  # Preto em vez de cinza
+    c.setFillColor(colors.black)
     c.setFont("Helvetica", 12)
     c.drawString(60, height - 70, f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
     c.line(60, height - 80, width - 60, height - 80)
@@ -176,7 +176,7 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
         grafico = criar_grafico_campo(dados_assimetricos["padrao"], dados_assimetricos["medido"], "assimetrico")
         c.drawImage(grafico, 60, y - 150, width=200, height=200)
 
-    c.setFillColor(colors.black)  # Preto em vez de cinza
+    c.setFillColor(colors.black)
     c.setFont("Helvetica", 10)
     c.drawString(60, 40, "Gerado por Streamlit - Testes de Tamanhos de Campo")
     c.drawString(width - 100, 40, f"Página 1")
@@ -246,6 +246,6 @@ if st.button("Gerar Relatório"):
         )
 
 st.markdown("""
-    <hr style="border: 1px solid #000000;">  <!-- Preto em vez de cinza -->
-    <p style="text-align: center; color: #000000;">Desenvolvido com Streamlit • 2025</p>  <!-- Preto em vez de cinza -->
+    <hr style="border: 1px solid #00ff00;">  <!-- Verde no lugar de cinza -->
+    <p style="text-align: center; color: #ff0000;">Desenvolvido com Streamlit • 2025</p>  <!-- Vermelho no lugar de cinza -->
 """, unsafe_allow_html=True)
