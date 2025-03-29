@@ -8,12 +8,64 @@ import matplotlib.pyplot as plt
 import tempfile
 
 # Configuração inicial do Streamlit
-st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
     .main {background-color: #e6f0ff;}
     
-    /* Remove bordas e contornos dos botões */
+    /* Remove TODOS os contornos cinza e estilos padrão */
+    div[data-baseweb="input"] {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Inputs numéricos - remove bordas e fundos cinza */
+    .stNumberInput>div>div>input {
+        background-color: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 4px !important;
+        padding: 4px 8px !important;
+    }
+    
+    /* Container dos inputs - remove fundo cinza */
+    .stNumberInput>div>div {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Remove borda de foco (quando clica no input) */
+    .stNumberInput>div>div>input:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+    
+    /* Remove bordas dos botões + e - */
+    .stNumberInput>div>div>div>button {
+        border: none !important;
+        background-color: #f0f0f0 !important;
+    }
+    
+    /* Remove bordas das seções */
+    .st-emotion-cache-1pbsqtx {
+        border: none !important;
+    }
+    
+    /* Remove linhas divisórias cinza */
+    .st-emotion-cache-1dp5vir {
+        border: none !important;
+    }
+    
+    /* Ajusta os labels para ficarem mais clean */
+    .st-emotion-cache-16idsys p {
+        color: #1e90ff !important;
+        font-weight: bold !important;
+        margin-bottom: 4px !important;
+    }
+    
+    /* Botões principais */
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -25,72 +77,6 @@ st.markdown("""
         transition: all 0.3s;
         border: none !important;
         box-shadow: none !important;
-        outline: none !important;
-    }
-    .stButton>button:hover {
-        background-color: #4169e1;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-    }
-    
-    /* Remove bordas dos containers */
-    .block-container {
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Remove linhas cinza de separação */
-    hr {
-        border: none !important;
-        height: 1px;
-        background-color: #1e90ff !important;
-        margin: 1rem 0;
-    }
-    
-    /* Remove bordas dos inputs */
-    .stNumberInput, .stTextInput, .stSelectbox {
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Remove fundo cinza dos widgets */
-    .stNumberInput>div>div, .stTextInput>div>div {
-        background-color: transparent !important;
-    }
-    
-    /* Ajuste do campo numérico */
-    div[data-baseweb="input"] > div > input[type="number"],
-    .stNumberInput > div > div > input {
-        border-radius: 4px;
-        padding: 2px !important;
-        border: none !important;
-        background-color: #ffffff;
-        width: 40px !important;
-        font-size: 12px !important;
-        max-width: 40px !important;
-        margin: 0px !important;
-        box-shadow: none !important;
-    }
-    
-    /* Container do number_input */
-    .stNumberInput > div > div {
-        display: flex !important;
-        align-items: center !important;
-        width: 70px !important;
-        padding: 0px !important;
-        margin: 0px !important;
-        border: none !important;
-        background: transparent !important;
-    }
-    
-    /* Botões + e - */
-    .stNumberInput > div > div > div > button {
-        padding: 0px !important;
-        width: 12px !important;
-        height: 12px !important;
-        font-size: 8px !important;
-        margin: 0px !important;
-        border-radius: 2px !important;
-        border: none !important;
     }
     
     .title {
@@ -114,18 +100,11 @@ st.markdown("""
         font-weight: bold;
         margin-top: 20px;
         margin-bottom: 10px;
-        border-bottom: 2px solid #1e90ff !important;
         padding-bottom: 5px;
     }
     
     /* Remove bordas das colunas */
     .st-emotion-cache-1v0mbdj {
-        border: none !important;
-    }
-    
-    /* Remove sombras e bordas dos cards */
-    .st-emotion-cache-1dp5vir {
-        box-shadow: none !important;
         border: none !important;
     }
     </style>
