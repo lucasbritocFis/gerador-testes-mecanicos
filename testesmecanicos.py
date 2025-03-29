@@ -10,68 +10,45 @@ import tempfile
 # Configuração inicial do Streamlit
 st.markdown("""
     <style>
-    /* --- ESTILO COMPACTO PARA OS INPUTS NUMÉRICOS --- */
-    /* Container principal (remove espaçamentos) */
-    .stNumberInput>div {
-        width: auto !important;
-        min-width: 80px !important;  /* Largura mínima reduzida */
+    /* --- ESTILO SUPER COMPACTO GARANTIDO --- */
+    /* Sobrescreve TUDO do Streamlit */
+    div[data-baseweb="input"] > div {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 90px !important;  /* Largura total do componente */
+    }
+    
+    /* Container interno - alinhamento extremo */
+    div[data-baseweb="input"] > div > div {
+        gap: 0 !important;
         padding: 0 !important;
         margin: 0 !important;
     }
-
-    /* Container interno (alinha número e botões) */
-    .stNumberInput>div>div {
-        gap: 0px !important;  /* ZERO espaçamento entre número e botões */
-        background-color: transparent !important;
-    }
-
-    /* Input numérico (bem compacto) */
-    .stNumberInput>div>div>input {
-        width: 40px !important;  /* Largura reduzida */
-        min-width: 40px !important;
+    
+    /* Input numérico - mínimo possível */
+    input[type="number"] {
+        width: 50px !important;
+        min-width: 50px !important;
         padding: 2px 4px !important;
-        margin: 0 -2px !important;  /* Empurra o número na direção dos botões */
-        text-align: center;
-        border: 1px solid #1e90ff !important;  /* Borda sutil azul */
-        border-radius: 4px !important;
+        margin: 0 -4px 0 0 !important;  /* Empurra para a direita */
+        border: 1px solid #1e90ff !important;
     }
-
-    /* Botões + e - (colados no número) */
-    .stNumberInput>div>div>div>button {
-        width: 18px !important;   /* Largura reduzida */
-        height: 18px !important;  /* Altura reduzida */
+    
+    /* Botões + e - colados */
+    div[data-baseweb="input"] > div > div > div > button {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
-        background-color: #1e90ff !important;  /* Azul igual ao botão principal */
-        color: white !important;
-        border-radius: 2px !important;
+        background: #1e90ff !important;
     }
-
-    /* Efeito hover nos botões */
-    .stNumberInput>div>div>div>button:hover {
-        background-color: #4169e1 !important;
-    }
-
-    /* --- MANTÉM O RESTO DO SEU ESTILO ORIGINAL --- */
-    .main {background-color: #e6f0ff;}
-    .stButton>button {
-        background-color: #1e90ff;
-        color: white;
-        border-radius: 12px;
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: bold;
-        width: 120px !important;
-        transition: all 0.3s;
-        border: none !important;
-    }
-    .title {
-        font-size: 36px;
-        font-weight: bold;
-        color: #1e90ff;
-        text-align: center;
-        margin-bottom: 20px;
+    
+    /* Posicionamento absoluto para colar os botões */
+    div[data-baseweb="input"] > div > div > div {
+        position: relative;
+        left: -5px !important;
     }
     </style>
 """, unsafe_allow_html=True)
