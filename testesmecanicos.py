@@ -1,3 +1,4 @@
+
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -16,9 +17,10 @@ st.markdown("""
         background-color: #1e90ff;
         color: white;
         border-radius: 12px;
-        padding: 10px 24px;
-        font-size: 16px;
+        padding: 8px 16px;  /* Reduzido horizontalmente de 10px 24px para 8px 16px */
+        font-size: 14px;    /* Tamanho da fonte reduzido de 16px para 14px */
         font-weight: bold;
+        width: 150px;       /* Largura fixa menor para os botões */
         transition: all 0.3s;
     }
     .stButton>button:hover {
@@ -27,11 +29,11 @@ st.markdown("""
     }
     .stTextInput>div>input, .stNumberInput>div>input {
         border-radius: 8px;
-        padding: 6px;  /* Reduzido para tornar os campos menores */
+        padding: 6px;
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 100px;  /* Largura fixa menor para os campos */
-        font-size: 14px;  /* Tamanho da fonte reduzido */
+        width: 100px;
+        font-size: 14px;
     }
     .title {
         font-size: 36px;
@@ -60,7 +62,6 @@ st.markdown("""
 def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
     fig, ax = plt.subplots(figsize=(5, 5))
     
-    # Escala reduzida para os retângulos
     escala = 0.1
 
     if tipo == "simetrico":
@@ -74,11 +75,8 @@ def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
         y_medido = (medido["y2"] - medido["y1"]) * escala
         ax.set_title("Campo Assimétrico")
 
-    # Campo padrão
     ax.add_patch(plt.Rectangle((-x_padrao/2, -y_padrao/2), x_padrao, y_padrao, fill=False, color="blue", label="Padrão"))
-    # Campo medido
     ax.add_patch(plt.Rectangle((-x_medido/2, -y_medido/2), x_medido, y_medido, fill=False, color="red", label="Medido"))
-    # Tolerância (±2 mm, ajustado pela escala)
     tolerancia = 0.2 * escala
     ax.add_patch(plt.Rectangle((-x_padrao/2 - tolerancia, -y_padrao/2 - tolerancia), 
                                x_padrao + 2 * tolerancia, y_padrao + 2 * tolerancia, 
@@ -105,7 +103,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
 
-    # Cabeçalho
     c.setFillColor(colors.darkblue)
     c.setFont("Helvetica-Bold", 20)
     c.drawString(60, height - 50, "Relatório de Testes de Tamanhos de Campo")
@@ -115,7 +112,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     c.line(60, height - 80, width - 60, height - 80)
 
     y = height - 120
-    # Testes Simétricos
     if dados_simetricos:
         c.setFillColor(colors.black)
         c.setFont("Helvetica-Bold", 14)
@@ -127,7 +123,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
             y_medido = dados_simetricos[f"{tamanho}x{tamanho}"]["y"]
             c.setFont("Helvetica", 12)
             c.drawString(60, y, f"Campo {tamanho}x{tamanho} cm: X = {x_medido} cm, Y = {y_medido} cm")
-            # Tolerância: ±2 mm (ex.: 5 cm -> 4.8 a 5.2 cm)
             tolerancia_x = (tamanho - 0.2) <= x_medido <= (tamanho + 0.2)
             tolerancia_y = (tamanho - 0.2) <= y_medido <= (tamanho + 0.2)
             c.setFillColor(tolerancia_x and tolerancia_y and colors.green or colors.red)
@@ -137,7 +132,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
             c.drawImage(grafico, 60, y - 150, width=200, height=200)
             y -= 220
 
-    # Testes Assimétricos
     if dados_assimetricos:
         c.setFont("Helvetica-Bold", 14)
         c.drawString(60, y, "Testes Assimétricos")
@@ -148,7 +142,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
         y -= 20
         c.drawString(60, y, f"Medido: X1={dados_assimetricos['medido']['x1']}, X2={dados_assimetricos['medido']['x2']}, "
                            f"Y1={dados_assimetricos['medido']['y1']}, Y2={dados_assimetricos['medido']['y2']} cm")
-        # Tolerância: ±2 mm para cada valor
         tolerancia_x1 = (dados_assimetricos['padrao']['x1'] - 0.2) <= dados_assimetricos['medido']['x1'] <= (dados_assimetricos['padrao']['x1'] + 0.2)
         tolerancia_x2 = (dados_assimetricos['padrao']['x2'] - 0.2) <= dados_assimetricos['medido']['x2'] <= (dados_assimetricos['padrao']['x2'] + 0.2)
         tolerancia_y1 = (dados_assimetricos['padrao']['y1'] - 0.2) <= dados_assimetricos['medido']['y1'] <= (dados_assimetricos['padrao']['y1'] + 0.2)
@@ -159,7 +152,6 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
         grafico = criar_grafico_campo(dados_assimetricos["padrao"], dados_assimetricos["medido"], "assimetrico")
         c.drawImage(grafico, 60, y - 150, width=200, height=200)
 
-    # Rodapé
     c.setFillColor(colors.grey)
     c.setFont("Helvetica", 10)
     c.drawString(60, 40, "Gerado por Streamlit - Testes de Tamanhos de Campo")
@@ -172,14 +164,11 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
 st.markdown('<div class="title">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
-# Abas para testes simétricos e assimétricos
 tab1, tab2 = st.tabs(["Testes Simétricos", "Testes Assimétricos"])
 
-# Dados para os testes
 dados_simetricos = {}
 dados_assimetricos = {}
 
-# Testes Simétricos
 with tab1:
     st.markdown('<div class="section-header">Campos Simétricos</div>', unsafe_allow_html=True)
     for tamanho in [5, 10, 15, 20, 25]:
@@ -191,7 +180,6 @@ with tab1:
             y = st.number_input(f"Y medido ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
         dados_simetricos[f"{tamanho}x{tamanho}"] = {"x": x, "y": y}
 
-# Testes Assimétricos
 with tab2:
     st.markdown('<div class="section-header">Campo Assimétrico - Padrão</div>', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
@@ -216,7 +204,6 @@ with tab2:
         "medido": {"x1": x1_medido, "x2": x2_medido, "y1": y1_medido, "y2": y2_medido}
     }
 
-# Botão para gerar relatório
 if st.button("Gerar Relatório"):
     with st.spinner("Gerando o relatório..."):
         pdf_buffer = gerar_relatorio_pdf(dados_simetricos, dados_assimetricos)
@@ -228,7 +215,6 @@ if st.button("Gerar Relatório"):
             mime="application/pdf"
         )
 
-# Rodapé
 st.markdown("""
     <hr style="border: 1px solid #dcdcdc;">
     <p style="text-align: center; color: #777777;">Desenvolvido com Streamlit • 2025</p>
