@@ -39,11 +39,6 @@ st.markdown("""
 }
 </style>
 
-<div class="custom-number-input">
-    <button>-</button>
-    <input type="number" value="10" min="0" max="100" step="1">
-    <button>+</button>
-</div>
 """, unsafe_allow_html=True)
 
 
