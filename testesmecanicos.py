@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import tempfile
 
 # Configuração inicial do Streamlit
-st.set_page_config(page_title="Testes Mecânicos em Aceleradores Lineares", layout="wide", page_icon="📏")
+st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
     .main {background-color: #f0f2f6;}
@@ -27,9 +27,11 @@ st.markdown("""
     }
     .stTextInput>div>input, .stNumberInput>div>input {
         border-radius: 8px;
-        padding: 8px;
+        padding: 6px;  /* Reduzido para tornar os campos menores */
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
+        width: 100px;  /* Largura fixa menor para os campos */
+        font-size: 14px;  /* Tamanho da fonte reduzido */
     }
     .title {
         font-size: 36px;
@@ -54,31 +56,37 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Função para criar gráficos de comparação
+# Função para criar gráficos de comparação com barras menores
 def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
     fig, ax = plt.subplots(figsize=(5, 5))
     
+    # Escala reduzida para os retângulos
+    escala = 0.1
+
     if tipo == "simetrico":
-        x_padrao, y_padrao = tamanho, tamanho
-        x_medido, y_medido = medido["x"], medido["y"]
+        x_padrao, y_padrao = tamanho * escala, tamanho * escala
+        x_medido, y_medido = medido["x"] * escala, medido["y"] * escala
         ax.set_title(f"Campo Simétrico {tamanho}x{tamanho} cm")
     else:
-        x_padrao = padrao["x2"] - padrao["x1"]
-        y_padrao = padrao["y2"] - padrao["y1"]
-        x_medido = medido["x2"] - medido["x1"]
-        y_medido = medido["y2"] - medido["y1"]
+        x_padrao = (padrao["x2"] - padrao["x1"]) * escala
+        y_padrao = (padrao["y2"] - padrao["y1"]) * escala
+        x_medido = (medido["x2"] - medido["x1"]) * escala
+        y_medido = (medido["y2"] - medido["y1"]) * escala
         ax.set_title("Campo Assimétrico")
 
     # Campo padrão
     ax.add_patch(plt.Rectangle((-x_padrao/2, -y_padrao/2), x_padrao, y_padrao, fill=False, color="blue", label="Padrão"))
     # Campo medido
     ax.add_patch(plt.Rectangle((-x_medido/2, -y_medido/2), x_medido, y_medido, fill=False, color="red", label="Medido"))
-    # Tolerância (±2 mm)
-    ax.add_patch(plt.Rectangle((-x_padrao/2 - 0.2, -y_padrao/2 - 0.2), x_padrao + 0.4, y_padrao + 0.4, 
+    # Tolerância (±2 mm, ajustado pela escala)
+    tolerancia = 0.2 * escala
+    ax.add_patch(plt.Rectangle((-x_padrao/2 - tolerancia, -y_padrao/2 - tolerancia), 
+                               x_padrao + 2 * tolerancia, y_padrao + 2 * tolerancia, 
                                fill=False, color="green", linestyle="--", label="Tolerância (±2 mm)"))
 
-    ax.set_xlim(-max(x_padrao, x_medido)/2 - 1, max(x_padrao, x_medido)/2 + 1)
-    ax.set_ylim(-max(y_padrao, y_medido)/2 - 1, max(y_padrao, y_medido)/2 + 1)
+    limite = max(x_padrao, x_medido, y_padrao, y_medido) / 2 + tolerancia + 0.5
+    ax.set_xlim(-limite, limite)
+    ax.set_ylim(-limite, limite)
     ax.set_xlabel("X (cm)")
     ax.set_ylabel("Y (cm)")
     ax.grid(True)
@@ -119,8 +127,9 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
             y_medido = dados_simetricos[f"{tamanho}x{tamanho}"]["y"]
             c.setFont("Helvetica", 12)
             c.drawString(60, y, f"Campo {tamanho}x{tamanho} cm: X = {x_medido} cm, Y = {y_medido} cm")
-            tolerancia_x = abs(x_medido - tamanho) <= 0.2
-            tolerancia_y = abs(y_medido - tamanho) <= 0.2
+            # Tolerância: ±2 mm (ex.: 5 cm -> 4.8 a 5.2 cm)
+            tolerancia_x = (tamanho - 0.2) <= x_medido <= (tamanho + 0.2)
+            tolerancia_y = (tamanho - 0.2) <= y_medido <= (tamanho + 0.2)
             c.setFillColor(tolerancia_x and tolerancia_y and colors.green or colors.red)
             c.drawString(300, y, f"{'Dentro' if tolerancia_x and tolerancia_y else 'Fora'} da tolerância (±2 mm)")
             c.setFillColor(colors.black)
@@ -139,10 +148,11 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
         y -= 20
         c.drawString(60, y, f"Medido: X1={dados_assimetricos['medido']['x1']}, X2={dados_assimetricos['medido']['x2']}, "
                            f"Y1={dados_assimetricos['medido']['y1']}, Y2={dados_assimetricos['medido']['y2']} cm")
-        tolerancia_x1 = abs(dados_assimetricos['medido']['x1'] - dados_assimetricos['padrao']['x1']) <= 0.2
-        tolerancia_x2 = abs(dados_assimetricos['medido']['x2'] - dados_assimetricos['padrao']['x2']) <= 0.2
-        tolerancia_y1 = abs(dados_assimetricos['medido']['y1'] - dados_assimetricos['padrao']['y1']) <= 0.2
-        tolerancia_y2 = abs(dados_assimetricos['medido']['y2'] - dados_assimetricos['padrao']['y2']) <= 0.2
+        # Tolerância: ±2 mm para cada valor
+        tolerancia_x1 = (dados_assimetricos['padrao']['x1'] - 0.2) <= dados_assimetricos['medido']['x1'] <= (dados_assimetricos['padrao']['x1'] + 0.2)
+        tolerancia_x2 = (dados_assimetricos['padrao']['x2'] - 0.2) <= dados_assimetricos['medido']['x2'] <= (dados_assimetricos['padrao']['x2'] + 0.2)
+        tolerancia_y1 = (dados_assimetricos['padrao']['y1'] - 0.2) <= dados_assimetricos['medido']['y1'] <= (dados_assimetricos['padrao']['y1'] + 0.2)
+        tolerancia_y2 = (dados_assimetricos['padrao']['y2'] - 0.2) <= dados_assimetricos['medido']['y2'] <= (dados_assimetricos['padrao']['y2'] + 0.2)
         c.setFillColor(all([tolerancia_x1, tolerancia_x2, tolerancia_y1, tolerancia_y2]) and colors.green or colors.red)
         c.drawString(300, y, f"{'Dentro' if all([tolerancia_x1, tolerancia_x2, tolerancia_y1, tolerancia_y2]) else 'Fora'} da tolerância (±2 mm)")
         c.setFillColor(colors.black)
