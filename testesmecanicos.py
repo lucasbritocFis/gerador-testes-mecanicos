@@ -11,7 +11,7 @@ import tempfile
 st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
-    .main {background-color: #e6f0ff;}  /* Azul claro */
+    .main {background-color: #e6f0ff;}
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -26,7 +26,6 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    /* Ajuste do campo numérico */
     div[data-baseweb="input"] > div > input[type="number"],
     .stNumberInput > div > div > input {
         border-radius: 4px;
@@ -39,7 +38,6 @@ st.markdown("""
         margin: 0px !important;
         box-shadow: none !important;
     }
-    /* Container do number_input */
     .stNumberInput > div > div {
         display: flex !important;
         align-items: center !important;
@@ -49,7 +47,6 @@ st.markdown("""
         border: none !important;
         background: transparent !important;
     }
-    /* Botões + e - */
     .stNumberInput > div > div > div > button {
         padding: 0px !important;
         width: 12px !important;
@@ -58,9 +55,8 @@ st.markdown("""
         margin: 0px !important;
         border-radius: 2px !important;
         border: none !important;
-        background-color: #ffffff !important;  /* Fundo branco nos botões */
+        background-color: #ffffff !important;
     }
-    /* Remover qualquer contorno ou fundo cinza */
     .stNumberInput, .stNumberInput * {
         border: none !important;
         background: transparent !important;
@@ -85,6 +81,10 @@ st.markdown("""
         font-weight: bold;
         margin-top: 20px;
         margin-bottom: 10px;
+    }
+    /* Reduzir a distância entre colunas */
+    .row-widget.stHorizontal {
+        gap: 5px !important;  /* Espaço reduzido entre colunas (ajuste conforme necessário) */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -186,7 +186,7 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
 st.markdown('<div class="title">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
-# Divisão em duas colunas para Simétricos e Assimétricos
+# Divisão em duas colunas principais
 col1, col2 = st.columns(2)
 
 dados_simetricos = {}
