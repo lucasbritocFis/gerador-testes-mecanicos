@@ -1,4 +1,3 @@
-
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -27,34 +26,38 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    /* Ajuste extremo para o campo numérico e botões */
+    /* Ajuste do campo numérico */
     div[data-baseweb="input"] > div > input[type="number"],
     .stNumberInput > div > div > input {
-        border-radius: 4px;         /* Reduzido para caber em menos espaço */
-        padding: 2px !important;    /* Menor padding */
-        border: 1px solid #dcdcdc;
+        border-radius: 4px;
+        padding: 2px !important;
+        border: none !important;      /* Remove o contorno cinza */
         background-color: #ffffff;
-        width: 40px !important;     /* Só o espaço do número (ex.: "5.20") */
+        width: 40px !important;
         font-size: 12px !important;
         max-width: 40px !important;
-        margin: 0px !important;     /* Remove margens extras */
+        margin: 0px !important;
+        box-shadow: none !important;  /* Remove qualquer sombra */
     }
     /* Container do number_input */
     .stNumberInput > div > div {
         display: flex !important;
         align-items: center !important;
-        width: 70px !important;     /* Largura total mínima para input + botões */
+        width: 70px !important;
         padding: 0px !important;
         margin: 0px !important;
+        border: none !important;      /* Remove contorno do container */
+        background: transparent !important;  /* Fundo transparente */
     }
     /* Botões + e - */
     .stNumberInput > div > div > div > button {
         padding: 0px !important;
-        width: 12px !important;     /* Botões menores */
+        width: 12px !important;
         height: 12px !important;
-        font-size: 8px !important;  /* Símbolos menores */
-        margin: 0px !important;     /* Sem margem */
+        font-size: 8px !important;
+        margin: 0px !important;
         border-radius: 2px !important;
+        border: none !important;      /* Remove contorno dos botões */
     }
     .title {
         font-size: 36px;
@@ -185,46 +188,52 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
 st.markdown('<div class="title">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
-tab1, tab2 = st.tabs(["Testes Simétricos", "Testes Assimétricos"])
+# Divisão em duas colunas para Simétricos e Assimétricos
+col1, col2 = st.columns(2)
 
 dados_simetricos = {}
 dados_assimetricos = {}
 
-with tab1:
+# Testes Simétricos
+with col1:
     st.markdown('<div class="section-header">Campos Simétricos</div>', unsafe_allow_html=True)
     for tamanho in [5, 10, 15, 20, 25]:
         st.write(f"Campo {tamanho}x{tamanho} cm")
-        col1, col2 = st.columns(2)
-        with col1:
-            x = st.number_input(f"X medido ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"x_{tamanho}")
-        with col2:
-            y = st.number_input(f"Y medido ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
+        subcol1, subcol2 = st.columns([1, 1])  # Colunas menores para X e Y
+        with subcol1:
+            x = st.number_input(f"X ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"x_{tamanho}")
+        with subcol2:
+            y = st.number_input(f"Y ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
         dados_simetricos[f"{tamanho}x{tamanho}"] = {"x": x, "y": y}
 
-with tab2:
-    st.markdown('<div class="section-header">Campo Assimétrico - Padrão</div>', unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        x1_padrao = st.number_input("X1 Padrão (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_padrao")
-        y1_padrao = st.number_input("Y1 Padrão (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_padrao")
-    with col2:
-        x2_padrao = st.number_input("X2 Padrão (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_padrao")
-        y2_padrao = st.number_input("Y2 Padrão (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_padrao")
+# Testes Assimétricos
+with col2:
+    st.markdown('<div class="section-header">Campo Assimétrico</div>', unsafe_allow_html=True)
+    
+    st.write("Padrão")
+    subcol1, subcol2 = st.columns([1, 1])
+    with subcol1:
+        x1_padrao = st.number_input("X1 P", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_padrao")
+        y1_padrao = st.number_input("Y1 P", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_padrao")
+    with subcol2:
+        x2_padrao = st.number_input("X2 P", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_padrao")
+        y2_padrao = st.number_input("Y2 P", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_padrao")
 
-    st.markdown('<div class="section-header">Campo Assimétrico - Medido</div>', unsafe_allow_html=True)
-    col3, col4 = st.columns(2)
-    with col3:
-        x1_medido = st.number_input("X1 Medido (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_medido")
-        y1_medido = st.number_input("Y1 Medido (cm)", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_medido")
-    with col4:
-        x2_medido = st.number_input("X2 Medido (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_medido")
-        y2_medido = st.number_input("Y2 Medido (cm)", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_medido")
+    st.write("Medido")
+    subcol3, subcol4 = st.columns([1, 1])
+    with subcol3:
+        x1_medido = st.number_input("X1 M", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="x1_medido")
+        y1_medido = st.number_input("Y1 M", min_value=-20.0, max_value=20.0, value=0.0, step=0.1, key="y1_medido")
+    with subcol4:
+        x2_medido = st.number_input("X2 M", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="x2_medido")
+        y2_medido = st.number_input("Y2 M", min_value=-20.0, max_value=20.0, value=10.0, step=0.1, key="y2_medido")
 
     dados_assimetricos = {
         "padrao": {"x1": x1_padrao, "x2": x2_padrao, "y1": y1_padrao, "y2": y2_padrao},
         "medido": {"x1": x1_medido, "x2": x2_medido, "y1": y1_medido, "y2": y2_medido}
     }
 
+# Botão para gerar relatório
 if st.button("Gerar Relatório"):
     with st.spinner("Gerando o relatório..."):
         pdf_buffer = gerar_relatorio_pdf(dados_simetricos, dados_assimetricos)
@@ -235,11 +244,6 @@ if st.button("Gerar Relatório"):
             file_name="Relatorio_Tamanhos_Campo.pdf",
             mime="application/pdf"
         )
-
-st.markdown("""
-    <hr style="border: 1px solid #dcdcdc;">
-    <p style="text-align: center; color: #777777;">Desenvolvido com Streamlit • 2025</p>
-""", unsafe_allow_html=True)
 
 st.markdown("""
     <hr style="border: 1px solid #dcdcdc;">
