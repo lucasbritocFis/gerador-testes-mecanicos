@@ -26,16 +26,25 @@ st.markdown("""
         background-color: #4169e1;
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    /* CSS mais específico para garantir aplicação nos campos numéricos */
+    /* Ajuste dos campos numéricos e botões + e - */
     div[data-baseweb="input"] > div > input[type="number"],
     .stNumberInput > div > div > input {
         border-radius: 8px;
         padding: 4px;
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 40px !important;  /* Largura pequena, suficiente para "5.2" */
+        width: 40px !important;
         font-size: 12px !important;
-        max-width: 40px !important;  /* Reforça o limite máximo */
+        max-width: 40px !important;
+        margin-right: 0px !important;  /* Remove margem à direita do input */
+    }
+    /* Ajuste dos botões + e - para ficarem mais próximos */
+    .stNumberInput > div > div > div > button {
+        padding: 0px !important;      /* Reduz padding dos botões */
+        width: 15px !important;       /* Largura pequena para os botões */
+        height: 15px !important;      /* Altura pequena para os botões */
+        font-size: 10px !important;   /* Tamanho da fonte dos botões */
+        margin-left: 2px !important;  /* Reduz espaço entre input e botões */
     }
     .title {
         font-size: 36px;
