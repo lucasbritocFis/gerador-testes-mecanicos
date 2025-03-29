@@ -31,6 +31,7 @@ st.markdown("""
     /* Container dos inputs */
     .stNumberInput>div>div {
         width: 55px !important;
+        margin: 0 !important;
         background-color: transparent !important;
         border: none !important;
         padding: 0 !important;
