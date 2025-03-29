@@ -1,4 +1,3 @@
-
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -20,7 +19,7 @@ st.markdown("""
         padding: 8px 16px;
         font-size: 14px;
         font-weight: bold;
-        width: 120px !important;  /* Botão "Gerar Relatório" com largura reduzida */
+        width: 120px !important;
         transition: all 0.3s;
     }
     .stButton>button:hover {
@@ -29,11 +28,11 @@ st.markdown("""
     }
     .stNumberInput>div>input {
         border-radius: 8px;
-        padding: 6px;
+        padding: 4px;           /* Reduzido para ocupar menos espaço vertical */
         border: 1px solid #dcdcdc;
         background-color: #ffffff;
-        width: 80px !important;  /* Largura reduzida para todos os campos de entrada numéricos */
-        font-size: 14px;
+        width: 50px !important; /* Largura bem pequena, próxima ao tamanho de um número como "5.2" */
+        font-size: 12px;        /* Fonte menor para combinar com o tamanho reduzido */
     }
     .title {
         font-size: 36px;
