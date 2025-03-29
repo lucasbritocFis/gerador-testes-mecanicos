@@ -82,9 +82,14 @@ st.markdown("""
         margin-top: 20px;
         margin-bottom: 10px;
     }
-    /* Reduzir a distância entre colunas */
+    /* Ajuste do espaçamento entre colunas */
+    [class*="stHorizontal"] > div {
+        margin-right: 2px !important;  /* Reduz o espaço à direita de cada coluna */
+        margin-left: 2px !important;   /* Reduz o espaço à esquerda de cada coluna */
+        padding: 0px !important;       /* Remove padding interno */
+    }
     .row-widget.stHorizontal {
-        gap: -102px !important;  /* Espaço reduzido entre colunas (ajuste conforme necessário) */
+        gap: 2px !important;           /* Tenta aplicar gap como fallback */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -203,7 +208,7 @@ with col1:
         with subcol2:
             y = st.number_input(f"Y", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
         dados_simetricos[f"{tamanho}x{tamanho}"] = {"x": x, "y": y}
-        st.markdown("<hr style='border: 1px solid #00ff00; margin: 5px 0;' />", unsafe_allow_html=True)  # Linha verde
+        st.markdown("<hr style='border: 1px solid #00ff00; margin: 5px 0;' />", unsafe_allow_html=True)
 
 # Testes Assimétricos
 with col2:
