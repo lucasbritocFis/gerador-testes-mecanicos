@@ -19,7 +19,7 @@ st.markdown("""
         padding: 8px 16px;
         font-size: 14px;
         font-weight: bold;
-        width: 200px !important;
+        width: 180px !important;
         transition: all 0.3s;
     }
     .stButton>button:hover {
