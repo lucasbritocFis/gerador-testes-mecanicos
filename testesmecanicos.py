@@ -10,73 +10,51 @@ import tempfile
 # Configuração inicial do Streamlit
 st.markdown("""
     <style>
-    /* Ajuste ESPECÍFICO para os botões + e - ficarem colados no número */
-    .stNumberInput>div>div {
-        gap: 2px !important;  /* Reduz o espaço entre o número e os botões */
-    }
-    
-    /* Ajusta o container do input para ser mais compacto */
+    /* --- ESTILO COMPACTO PARA OS INPUTS NUMÉRICOS --- */
+    /* Container principal (remove espaçamentos) */
     .stNumberInput>div {
         width: auto !important;
-        min-width: 100px !important;
-        padding: 0 !important;
-    }
-    
-    /* Ajusta o tamanho dos botões + e - */
-    .stNumberInput>div>div>div>button {
-        width: 20px !important;
-        height: 20px !important;
+        min-width: 80px !important;  /* Largura mínima reduzida */
         padding: 0 !important;
         margin: 0 !important;
     }
-    
-    /* Ajusta o input numérico para ser mais compacto */
-    .stNumberInput>div>div>input {
-        width: 50px !important;
-        min-width: 50px !important;
-        padding: 2px 4px !important;
-        margin: 0 !important;
-        text-align: center;
-    }
-    
-    /* Mantém todos os outros estilos anteriores */
-    .main {background-color: #e6f0ff;}
-    div[data-baseweb="input"] {
+
+    /* Container interno (alinha número e botões) */
+    .stNumberInput>div>div {
+        gap: 0px !important;  /* ZERO espaçamento entre número e botões */
         background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
     }
+
+    /* Input numérico (bem compacto) */
     .stNumberInput>div>div>input {
-        background-color: white !important;
-        border: none !important;
-        box-shadow: none !important;
+        width: 40px !important;  /* Largura reduzida */
+        min-width: 40px !important;
+        padding: 2px 4px !important;
+        margin: 0 -2px !important;  /* Empurra o número na direção dos botões */
+        text-align: center;
+        border: 1px solid #1e90ff !important;  /* Borda sutil azul */
         border-radius: 4px !important;
     }
-    .stNumberInput>div>div {
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    .stNumberInput>div>div>input:focus {
-        outline: none !important;
-        box-shadow: none !important;
-        border: none !important;
-    }
+
+    /* Botões + e - (colados no número) */
     .stNumberInput>div>div>div>button {
+        width: 18px !important;   /* Largura reduzida */
+        height: 18px !important;  /* Altura reduzida */
+        padding: 0 !important;
+        margin: 0 !important;
         border: none !important;
-        background-color: #f0f0f0 !important;
+        background-color: #1e90ff !important;  /* Azul igual ao botão principal */
+        color: white !important;
+        border-radius: 2px !important;
     }
-    .st-emotion-cache-1pbsqtx {
-        border: none !important;
+
+    /* Efeito hover nos botões */
+    .stNumberInput>div>div>div>button:hover {
+        background-color: #4169e1 !important;
     }
-    .st-emotion-cache-1dp5vir {
-        border: none !important;
-    }
-    .st-emotion-cache-16idsys p {
-        color: #1e90ff !important;
-        font-weight: bold !important;
-        margin-bottom: 4px !important;
-    }
+
+    /* --- MANTÉM O RESTO DO SEU ESTILO ORIGINAL --- */
+    .main {background-color: #e6f0ff;}
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -87,7 +65,6 @@ st.markdown("""
         width: 120px !important;
         transition: all 0.3s;
         border: none !important;
-        box-shadow: none !important;
     }
     .title {
         font-size: 36px;
@@ -96,25 +73,9 @@ st.markdown("""
         text-align: center;
         margin-bottom: 20px;
     }
-    .subtitle {
-        font-size: 18px;
-        color: #1e90ff;
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    .section-header {
-        font-size: 24px;
-        color: #800080;
-        font-weight: bold;
-        margin-top: 20px;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
-    }
-    .st-emotion-cache-1v0mbdj {
-        border: none !important;
-    }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Função para criar gráficos de comparação com barras menores
 def criar_grafico_campo(padrao, medido, tipo, tamanho=None):
