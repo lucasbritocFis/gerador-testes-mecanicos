@@ -1,4 +1,3 @@
-
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -31,22 +30,21 @@ st.markdown("""
     .stNumberInput {
         margin: 0px !important;
         padding: 0px !important;
-        width: 60px !important;  /* Ajuste a largura conforme necessário */
+        width: 60px !important;
     }
     .stNumberInput > div {
         margin: 0px !important;
         padding: 0px !important;
     }
-    /* Ajuste das colunas */
+    /* Ajuste das colunas internas (X e Y) */
     [class*="stHorizontal"] > div {
-        max-width: 60px !important;  /* Largura máxima das colunas */
+        max-width: 60px !important;
         margin-right: 2px !important;
         margin-left: 2px !important;
     }
-    /* Remover espaçamento extra */
+    /* Aumentar a distância entre as colunas principais (col1 e col2) */
     .st-emotion-cache-1r4s1i0 {
-        margin: 0px !important;
-        padding: 0px !important;
+        gap: 50px !important;  /* Aumenta o espaço entre Campos Simétricos e Campo Assimétrico */
     }
     </style>
 """, unsafe_allow_html=True)
@@ -145,8 +143,8 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     return buffer
 
 # Interface do Streamlit
-st.markdown('<div class="title">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
+st.markdown('<div style="font-size: 36px; font-weight: bold; color: #1e90ff; text-align: center; margin-bottom: 20px;">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
+st.markdown('<div style="font-size: 18px; color: #1e90ff; text-align: center; margin-bottom: 40px;">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
 # Divisão em duas colunas principais
 col1, col2 = st.columns(2)
@@ -156,7 +154,7 @@ dados_assimetricos = {}
 
 # Testes Simétricos
 with col1:
-    st.markdown('<div class="section-header">Campos Simétricos</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: 24px; color: #800080; font-weight: bold; margin-top: 20px; margin-bottom: 10px;">Campos Simétricos</div>', unsafe_allow_html=True)
     for tamanho in [5, 10, 15, 20, 25]:
         st.write(f"Campo {tamanho}x{tamanho} cm")
         subcol1, subcol2 = st.columns(2)
@@ -169,7 +167,7 @@ with col1:
 
 # Testes Assimétricos
 with col2:
-    st.markdown('<div class="section-header">Campo Assimétrico</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size: 24px; color: #800080; font-weight: bold; margin-top: 20px; margin-bottom: 10px;">Campo Assimétrico</div>', unsafe_allow_html=True)
     
     st.write("Padrão")
     subcol1, subcol2 = st.columns(2)
