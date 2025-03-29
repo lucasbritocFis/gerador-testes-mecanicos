@@ -19,7 +19,7 @@ st.markdown("""
 
 .custom-number-input button {
     width: 2px !important;
-    height: 24px !important;
+    height: 2px !important;
     padding: 0 !important;
     margin: 0 !important;
     border: none !important;
