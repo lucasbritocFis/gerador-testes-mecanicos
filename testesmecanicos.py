@@ -11,7 +11,7 @@ import tempfile
 st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 st.markdown("""
     <style>
-    .main {background-color: #f0f2f6;}
+    .main {background-color: #ffffff;}  /* Fundo branco em vez de cinza */
     .stButton>button {
         background-color: #1e90ff;
         color: white;
@@ -19,7 +19,7 @@ st.markdown("""
         padding: 8px 16px;
         font-size: 14px;
         font-weight: bold;
-        width: 180px !important;
+        width: 120px !important;
         transition: all 0.3s;
     }
     .stButton>button:hover {
@@ -31,13 +31,13 @@ st.markdown("""
     .stNumberInput > div > div > input {
         border-radius: 4px;
         padding: 2px !important;
-        border: none !important;      /* Remove o contorno cinza */
+        border: none !important;
         background-color: #ffffff;
         width: 40px !important;
         font-size: 12px !important;
         max-width: 40px !important;
         margin: 0px !important;
-        box-shadow: none !important;  /* Remove qualquer sombra */
+        box-shadow: none !important;
     }
     /* Container do number_input */
     .stNumberInput > div > div {
@@ -46,8 +46,8 @@ st.markdown("""
         width: 70px !important;
         padding: 0px !important;
         margin: 0px !important;
-        border: none !important;      /* Remove contorno do container */
-        background: transparent !important;  /* Fundo transparente */
+        border: none !important;
+        background: transparent !important;
     }
     /* Botões + e - */
     .stNumberInput > div > div > div > button {
@@ -57,7 +57,7 @@ st.markdown("""
         font-size: 8px !important;
         margin: 0px !important;
         border-radius: 2px !important;
-        border: none !important;      /* Remove contorno dos botões */
+        border: none !important;
     }
     .title {
         font-size: 36px;
@@ -68,13 +68,13 @@ st.markdown("""
     }
     .subtitle {
         font-size: 18px;
-        color: #555555;
+        color: #000000;  /* Preto em vez de cinza */
         text-align: center;
         margin-bottom: 40px;
     }
     .section-header {
         font-size: 24px;
-        color: #333333;
+        color: #000000;  /* Preto em vez de cinza */
         font-weight: bold;
         margin-top: 20px;
         margin-bottom: 10px;
@@ -130,7 +130,7 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
     c.setFillColor(colors.darkblue)
     c.setFont("Helvetica-Bold", 20)
     c.drawString(60, height - 50, "Relatório de Testes de Tamanhos de Campo")
-    c.setFillColor(colors.grey)
+    c.setFillColor(colors.black)  # Preto em vez de cinza
     c.setFont("Helvetica", 12)
     c.drawString(60, height - 70, f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
     c.line(60, height - 80, width - 60, height - 80)
@@ -176,7 +176,7 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
         grafico = criar_grafico_campo(dados_assimetricos["padrao"], dados_assimetricos["medido"], "assimetrico")
         c.drawImage(grafico, 60, y - 150, width=200, height=200)
 
-    c.setFillColor(colors.grey)
+    c.setFillColor(colors.black)  # Preto em vez de cinza
     c.setFont("Helvetica", 10)
     c.drawString(60, 40, "Gerado por Streamlit - Testes de Tamanhos de Campo")
     c.drawString(width - 100, 40, f"Página 1")
@@ -199,7 +199,7 @@ with col1:
     st.markdown('<div class="section-header">Campos Simétricos</div>', unsafe_allow_html=True)
     for tamanho in [5, 10, 15, 20, 25]:
         st.write(f"Campo {tamanho}x{tamanho} cm")
-        subcol1, subcol2 = st.columns([1, 1])  # Colunas menores para X e Y
+        subcol1, subcol2 = st.columns([1, 1])
         with subcol1:
             x = st.number_input(f"X ({tamanho}x{tamanho})", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"x_{tamanho}")
         with subcol2:
@@ -246,6 +246,6 @@ if st.button("Gerar Relatório"):
         )
 
 st.markdown("""
-    <hr style="border: 1px solid #dcdcdc;">
-    <p style="text-align: center; color: #777777;">Desenvolvido com Streamlit • 2025</p>
+    <hr style="border: 1px solid #000000;">  <!-- Preto em vez de cinza -->
+    <p style="text-align: center; color: #000000;">Desenvolvido com Streamlit • 2025</p>  <!-- Preto em vez de cinza -->
 """, unsafe_allow_html=True)
