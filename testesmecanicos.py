@@ -17,7 +17,7 @@ st.markdown("<p style='text-align: center;'>Linha 1 = Padrão | Linha 2 = Medido
 # =============================
 # Interface – Linha 1 (Padrão)
 # =============================
-st.write("### Linha 1 (Padrão)")
+st.write("### Campo 5 x 5")
 # Divisão em 3 colunas: simétrico, separador e assimétrico
 col_sym1, col_sep1, col_asym1 = st.columns([2, 1, 2])
 with col_sym1:
@@ -38,7 +38,7 @@ st.markdown("---")
 # =============================
 # Interface – Linha 2 (Medido)
 # =============================
-st.write("### Linha 2 (Medido)")
+st.write("### Campo 10x10")
 col_sym2, col_sep2, col_asym2 = st.columns([2, 1, 2])
 with col_sym2:
     sym2_cols = st.columns(2)
