@@ -28,7 +28,7 @@ st.markdown("""
     }
     /* Ajuste dos campos numéricos */
     .stNumberInput {
-        margin: 15px !important;
+        margin: 2px !important;
         padding: 0px !important;
         width: 60px !important;
     }
