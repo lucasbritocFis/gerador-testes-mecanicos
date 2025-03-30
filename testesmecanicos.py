@@ -28,7 +28,7 @@ st.markdown("""
     }
     /* Ajuste dos campos numéricos */
     .stNumberInput {
-        margin: 5px !important;
+        margin: 15px !important;
         padding: 0px !important;
         width: 60px !important;
     }
@@ -38,7 +38,7 @@ st.markdown("""
     }
     /* Ajuste das colunas internas (X e Y) */
     [class*="stHorizontal"] > div {
-        max-width: 300px !important;
+        max-width: 200px !important;
         margin-right: 2px !important;
         margin-left: 2px !important;
     }
