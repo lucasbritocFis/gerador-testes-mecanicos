@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Testes de Tamanhos de Campo", layout="wide", page_icon="📏")
 
 st.markdown("<h1 style='text-align: center; color: #1e90ff;'>Testes de Tamanhos de Campo</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center;'>Teste para o tamanho de campo simétrico  /  Teste para o tamanho de campo assimétrico</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center;'>Teste para o tamanho de campo simétrico   Teste para o tamanho de campo assimétrico</h3>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Linha 1 = Padrão | Linha 2 = Medido</p>", unsafe_allow_html=True)
 
 # =============================
@@ -24,8 +24,6 @@ with col_sym1:
     sym1_cols = st.columns(2)
     std_sym_x = sym1_cols[0].number_input("Simétrico: x (cm)", key="std_sym_x", value=5.0)
     std_sym_y = sym1_cols[1].number_input("Simétrico: y (cm)", key="std_sym_y", value=5.0)
-with col_sep1:
-    #st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
 with col_asym1:
     # Para o teste assimétrico, separe em duas linhas: primeira para x1 e x2, segunda para y1 e y2
     asym1_top = st.columns(2)
@@ -46,8 +44,7 @@ with col_sym2:
     sym2_cols = st.columns(2)
     meas_sym_x = sym2_cols[0].number_input("Simétrico: x (cm)", key="meas_sym_x", value=5.2)
     meas_sym_y = sym2_cols[1].number_input("Simétrico: y (cm)", key="meas_sym_y", value=4.9)
-with col_sep2:
-    #st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
+
 with col_asym2:
     asym2_top = st.columns(2)
     meas_asym_x1 = asym2_top[0].number_input("Assimétrico: x1 (cm)", key="meas_asym_x1", value=0.1)
