@@ -42,14 +42,6 @@ st.markdown("""
         margin-right: 2px !important;
         margin-left: 2px !important;
     }
-    /* Aumentar a distância entre as colunas principais (col1 e col2) */
-    div[data-testid="column"] + div[data-testid="column"] {
-        margin-left: 100px !important;  /* Adiciona espaço à esquerda da segunda coluna */
-    }
-    /* Alternativa para garantir o efeito em versões diferentes */
-    .row-widget.stHorizontal {
-        gap: 100px !important;  /* Fallback para versões mais antigas */
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -150,8 +142,8 @@ def gerar_relatorio_pdf(dados_simetricos, dados_assimetricos):
 st.markdown('<div style="font-size: 36px; font-weight: bold; color: #1e90ff; text-align: center; margin-bottom: 20px;">📏 Testes de Tamanhos de Campo</div>', unsafe_allow_html=True)
 st.markdown('<div style="font-size: 18px; color: #1e90ff; text-align: center; margin-bottom: 40px;">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
-# Divisão em duas colunas principais
-col1, col2 = st.columns(2)
+# Divisão em três colunas: col1 (simétricos), espaço vazio, col2 (assimétricos)
+col1, spacer, col2 = st.columns([2, 2, 2])  # Proporções: 2 para col1, 2 para espaço, 2 para col2
 
 dados_simetricos = {}
 dados_assimetricos = {}
@@ -168,6 +160,10 @@ with col1:
             y = st.number_input(f"Y", min_value=0.0, max_value=30.0, value=float(tamanho), step=0.1, key=f"y_{tamanho}")
         dados_simetricos[f"{tamanho}x{tamanho}"] = {"x": x, "y": y}
         st.markdown("<hr style='border: 1px solid #00ff00; margin: 5px 0;' />", unsafe_allow_html=True)
+
+# Espaço vazio (spacer) não precisa de conteúdo
+with spacer:
+    pass
 
 # Testes Assimétricos
 with col2:
