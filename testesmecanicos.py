@@ -43,8 +43,12 @@ st.markdown("""
         margin-left: 2px !important;
     }
     /* Aumentar a distância entre as colunas principais (col1 e col2) */
-    .st-emotion-cache-1r4s1i0 {
-        gap: 1500px !important;  /* Aumenta o espaço entre Campos Simétricos e Campo Assimétrico */
+    div[data-testid="column"] + div[data-testid="column"] {
+        margin-left: 100px !important;  /* Adiciona espaço à esquerda da segunda coluna */
+    }
+    /* Alternativa para garantir o efeito em versões diferentes */
+    .row-widget.stHorizontal {
+        gap: 100px !important;  /* Fallback para versões mais antigas */
     }
     </style>
 """, unsafe_allow_html=True)
