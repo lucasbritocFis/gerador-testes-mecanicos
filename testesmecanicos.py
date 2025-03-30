@@ -38,7 +38,7 @@ st.markdown("""
     }
     /* Ajuste das colunas internas (X e Y) */
     [class*="stHorizontal"] > div {
-        max-width: 90px !important;
+        max-width: 300px !important;
         margin-right: 2px !important;
         margin-left: 2px !important;
     }
