@@ -28,7 +28,7 @@ st.markdown("""
     }
     /* Ajuste dos campos numéricos */
     .stNumberInput {
-        margin: 0px !important;
+        margin: 5px !important;
         padding: 0px !important;
         width: 60px !important;
     }
@@ -38,7 +38,7 @@ st.markdown("""
     }
     /* Ajuste das colunas internas (X e Y) */
     [class*="stHorizontal"] > div {
-        max-width: 60px !important;
+        max-width: 90px !important;
         margin-right: 2px !important;
         margin-left: 2px !important;
     }
@@ -143,7 +143,7 @@ st.markdown('<div style="font-size: 36px; font-weight: bold; color: #1e90ff; tex
 st.markdown('<div style="font-size: 18px; color: #1e90ff; text-align: center; margin-bottom: 40px;">Insira os valores medidos para gerar um relatório com representações visuais</div>', unsafe_allow_html=True)
 
 # Divisão em três colunas: col1 (simétricos), espaço vazio, col2 (assimétricos)
-col1, spacer, col2 = st.columns([2, 5, 2])  # Proporções: 2 para col1, 2 para espaço, 2 para col2
+col1, spacer, col2 = st.columns([2, 2, 2])  # Proporções: 2 para col1, 2 para espaço, 2 para col2
 
 dados_simetricos = {}
 dados_assimetricos = {}
