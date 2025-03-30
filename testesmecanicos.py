@@ -38,12 +38,12 @@ st.markdown("---")
 # =============================
 # Interface – Linha 2 (Medido)
 # =============================
-st.write("### Campo 10x10")
+st.write("### Campo 10 x 10")
 col_sym2, col_sep2, col_asym2 = st.columns([2, 1, 2])
 with col_sym2:
     sym2_cols = st.columns(2)
-    meas_sym_x = sym2_cols[0].number_input("Simétrico: x (cm)", key="meas_sym_x", value=5.2)
-    meas_sym_y = sym2_cols[1].number_input("Simétrico: y (cm)", key="meas_sym_y", value=4.9)
+    meas_sym_x = sym2_cols[0].number_input("Simétrico: x (cm)", key="meas_sym_x", value=10.0)
+    meas_sym_y = sym2_cols[1].number_input("Simétrico: y (cm)", key="meas_sym_y", value=10.0)
 
 with col_asym2:
     asym2_top = st.columns(2)
@@ -52,6 +52,21 @@ with col_asym2:
     asym2_bot = st.columns(2)
     meas_asym_y1 = asym2_bot[0].number_input("Assimétrico: y1 (cm)", key="meas_asym_y1", value=0.2)
     meas_asym_y2 = asym2_bot[1].number_input("Assimétrico: y2 (cm)", key="meas_asym_y2", value=10.1)
+
+st.write("### Campo 15 x 15")
+col_sym3, col_sep3, col_asym3 = st.columns([2, 1, 2])
+with col_sym3:
+    sym3_cols = st.columns(2)
+    meas_sym_x = sym3_cols[0].number_input("Simétrico: x (cm)", key="meas_sym_x", value=10.0)
+    meas_sym_y = sym3_cols[1].number_input("Simétrico: y (cm)", key="meas_sym_y", value=10.0)
+
+with col_asym3:
+    asym3_top = st.columns(2)
+    meas_asym_x1 = asym3_top[0].number_input("Assimétrico: x1 (cm)", key="meas_asym_x1", value=0.1)
+    meas_asym_x2 = asym3_top[1].number_input("Assimétrico: x2 (cm)", key="meas_asym_x2", value=9.9)
+    asym2_bot = st.columns(2)
+    meas_asym_y1 = asym3_bot[0].number_input("Assimétrico: y1 (cm)", key="meas_asym_y1", value=0.2)
+    meas_asym_y2 = asym3_bot[1].number_input("Assimétrico: y2 (cm)", key="meas_asym_y2", value=10.1)
 
 # Função para criar gráfico do teste simétrico
 def criar_grafico_campo_simetrico(expected, measured):
