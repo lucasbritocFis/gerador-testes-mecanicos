@@ -25,7 +25,7 @@ with col_sym1:
     std_sym_x = sym1_cols[0].number_input("Simétrico: x (cm)", key="std_sym_x", value=5.0)
     std_sym_y = sym1_cols[1].number_input("Simétrico: y (cm)", key="std_sym_y", value=5.0)
 with col_sep1:
-    st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
+    #st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
 with col_asym1:
     # Para o teste assimétrico, separe em duas linhas: primeira para x1 e x2, segunda para y1 e y2
     asym1_top = st.columns(2)
@@ -47,7 +47,7 @@ with col_sym2:
     meas_sym_x = sym2_cols[0].number_input("Simétrico: x (cm)", key="meas_sym_x", value=5.2)
     meas_sym_y = sym2_cols[1].number_input("Simétrico: y (cm)", key="meas_sym_y", value=4.9)
 with col_sep2:
-    st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
+    #st.markdown("<h1 style='text-align: center;'>/</h1>", unsafe_allow_html=True)
 with col_asym2:
     asym2_top = st.columns(2)
     meas_asym_x1 = asym2_top[0].number_input("Assimétrico: x1 (cm)", key="meas_asym_x1", value=0.1)
